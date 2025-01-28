@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Vacancies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            
+            background:  #2A9D8F;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #1e4d92;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #1e4d92;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #153a6f;
+        }
+
+        /* Vacancies Section */
+        .vacancies-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: #1e4d92;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vacancies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .vacancy-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .vacancy-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .vacancy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .vacancy-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e4d92;
+        }
+
+        .vacancy-subject {
+            background: #e8f4ff;
+            color: #1e4d92;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .vacancy-details {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .vacancy-requirements {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .vacancy-requirements strong {
+            color: #1e4d92;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .vacancy-requirements ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .vacancy-requirements li {
+            color: #666;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .vacancy-requirements li:before {
+            content: "•";
+            color: #1e4d92;
+            position: absolute;
+            left: 0;
+        }
+
+        .vacancy-salary {
+            font-weight: 600;
+            color: #2d8a2d;
+            margin-bottom: 15px;
+        }
+
+        .apply-btn {
+            background: #1e4d92;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .apply-btn:hover {
+            background: #153a6f;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .vacancies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Add these styles to your existing CSS */
+        .vacancy-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .applicant-count {
+            background: #e8f4ff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            color: #1e4d92;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .applicant-count i {
+            font-size: 0.9em;
+        }
+
+        .posted-by {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .posted-by i {
+            color: #1e4d92;
+        }
+        
+    .apply-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .vacancy-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .applicant-count {
+        font-size: 0.9em;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-brand">Available Vacancies</div>
+            <div class="nav-links">
+                <a href="teacherProfile.html" class="nav-btn">
+                    <i class="fas fa-user"></i> Back to Profile
+                </a>
+                <button onclick="logout()" class="nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="vacancies-section">
+            <h2 class="section-title">
+                <i class="fas fa-briefcase"></i> Current Openings
+            </h2>
+            <div id="vacanciesList" class="vacancies-grid">
+                <!-- Vacancies will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication on page load
+window.onload = async function() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'teacher.html';
+        return;
+    }
+    loadVacancies();
+};
+
+
+function shouldDisplayVacancy(vacancy) {
+    if (!vacancy) return false;
+    const applications = vacancy.applications || [];
+    return applications.length < 5;
+}
+
+// Update the loadVacancies function
+async function loadVacancies() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch('http://localhost:5000/api/teacher-apply/available-vacancies', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch vacancies');
+
+        const result = await response.json();
+        console.log('API Response:', result); // Debug log
+
+        // Check for the correct data structure
+        if (!result.success || !result.data || !Array.isArray(result.data)) {
+            throw new Error('Invalid data format received');
+        }
+
+        const vacanciesList = document.getElementById('vacanciesList');
+        const vacancies = result.data;
+
+        if (vacancies.length === 0) {
+            vacanciesList.innerHTML = `
+                <div class="error">
+                    <i class="fas fa-info-circle"></i>
+                    <p>No vacancies available at the moment.</p>
+                </div>`;
+            return;
+        }
+
+        vacanciesList.innerHTML = '';
+
+        vacancies.forEach(vacancy => {
+            const applications = vacancy.applications || [];
+            const card = document.createElement('div');
+            card.className = 'vacancy-card';
+            card.innerHTML = `
+                <div class="vacancy-header">
+                    <span class="vacancy-title">${vacancy.title || 'Untitled'}</span>
+                    <span class="vacancy-subject">${(vacancy.subject || 'General').charAt(0).toUpperCase() + (vacancy.subject || 'General').slice(1)}</span>
+                </div>
+                <div class="vacancy-meta">
+                    <span class="applicant-count">
+                        <i class="fas fa-users"></i> ${applications.length}/5 Applicants
+                    </span>
+                </div>
+                <div class="vacancy-details">
+                    ${vacancy.description || 'No description available'}
+                </div>
+                <div class="vacancy-requirements">
+                    <strong><i class="fas fa-list-ul"></i> Requirements</strong>
+                    <ul>
+                        ${Array.isArray(vacancy.requirements) ? 
+                            vacancy.requirements.map(req => `<li>${req}</li>`).join('') :
+                            '<li>No specific requirements listed</li>'
+                        }
+                    </ul>
+                </div>
+                <div class="vacancy-salary">
+                    <i class="fas fa-money-bill-wave"></i> Salary: ${vacancy.salary || 'Not specified'}
+                </div>
+                <button onclick="applyForVacancy('${vacancy.id}')" class="apply-btn" 
+                    ${applications.length >= 5 ? 'disabled' : ''}>
+                    <i class="fas fa-paper-plane"></i> Apply Now
+                </button>
+            `;
+            vacanciesList.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading vacancies:', error);
+        document.getElementById('vacanciesList').innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Error loading vacancies. Please try again later.</p>
+                <small>${error.message}</small>
+            </div>`;
+    }
+}
+
+
+async function applyForVacancy(vacancyId) {
+    const confirmed = await Swal.fire({
+        title: 'Confirm Application',
+        text: 'Are you sure you want to apply for this vacancy?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, apply!',
+        cancelButtonText: 'Cancel'
+    });
+
+    if (!confirmed.isConfirmed) {
+        return; // User cancelled
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`http://localhost:5000/api/teacher-apply/apply-vacancy/${vacancyId}`, {  // Updated endpoint
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Show success message
+            await Swal.fire({
+                title: 'Success!',
+                text: 'Application submitted successfully!',
+                icon: 'success'
+            });
+            loadVacancies(); // Refresh the vacancies list
+        } else {
+            // Show error message
+            await Swal.fire({
+                title: 'Error!',
+                text: data.message || 'Error submitting application',
+                icon: 'error'
+            });
+        }
+    } catch (error) {
+        console.error('Error applying for vacancy:', error);
+        await Swal.fire({
+            title: 'Error!',
+            text: 'Error submitting application. Please try again.',
+            icon: 'error'
+        });
+    }
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = 'teacher.html';
+}
+    </script>
+</body>
+</html>

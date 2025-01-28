@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="teacherProfile.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <span>My Applications</span>
+            </div>
+            <div class="nav-actions">
+                <button onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-info">
+                    <h3 id="totalApplications">0</h3>
+                    <p>Total Applications</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-info">
+                    <h3 id="acceptedApplications">0</h3>
+                    <p>Accepted</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h3 id="pendingApplications">0</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications List -->
+        <div class="applications-container">
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="accepted">Accepted</button>
+                <button class="filter-btn" data-filter="rejected">Rejected</button>
+            </div>
+            
+            <div id="applicationsList" class="applications-list">
+                <!-- Applications will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #264653;
+            --accent-color: #E9C46A;
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --background-color: #F8F9FA;
+            --card-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: #333;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 1rem;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .stat-info p {
+            color: #666;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .applications-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .application-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .status-badge {
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .status-accepted {
+            background: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: #ffebee;
+            color: var(--danger-color);
+        }
+
+        .application-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .applications-list {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                padding-bottom: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        let applications = [];
+
+        async function loadApplications() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/teacher-apply/my-applications', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                applications = data.applications;
+                
+                updateStats();
+                displayApplications('all');
+                
+            } catch (error) {
+                console.error('Error loading applications:', error);
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalApplications').textContent = applications.length;
+            document.getElementById('acceptedApplications').textContent = 
+                applications.filter(app => app.status === 'accepted').length;
+            document.getElementById('pendingApplications').textContent = 
+                applications.filter(app => app.status === 'pending').length;
+        }
+
+        function displayApplications(filter) {
+            const applicationsList = document.getElementById('applicationsList');
+            applicationsList.innerHTML = '';
+
+            const filteredApplications = filter === 'all' 
+                ? applications 
+                : applications.filter(app => app.status === filter);
+
+            filteredApplications.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'application-card';
+                card.innerHTML = `
+                    <div class="application-header">
+                        <h3 class="application-title">${app.vacancy.title}</h3>
+                        <span class="status-badge status-${app.status}">${app.status}</span>
+                    </div>
+                    <div class="application-details">
+                        <div class="detail-item">
+                            <i class="fas fa-book"></i>
+                            <span>${app.vacancy.subject}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>${app.vacancy.salary}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Applied on ${new Date(app.appliedAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `;
+                applicationsList.appendChild(card);
+            });
+        }
+
+        // Filter buttons functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                displayApplications(e.target.dataset.filter);
+            });
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'teacher.html';
+        }
+
+        // Load applications when page loads
+        window.onload = loadApplications;
+    </script>
+</body>
+</html> 
